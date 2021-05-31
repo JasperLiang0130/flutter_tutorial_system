@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'student.dart';
-
+import 'studentListPage.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized(); //added this line
@@ -98,12 +98,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: <Widget> [
             //StudentsPage(),
-            Center(
-              child: Text("It's students area"),
-            ),
+            StudentListPage(),
             Center(
               child: Text("It's tutorial area"),
             ),
@@ -116,62 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class StudentsPage extends StatefulWidget
-{
-  @override
-  _StudentPageState createState() => _StudentPageState();
 
-}
-
-class _StudentPageState extends State<StudentsPage>{
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<StudentModel>(
-      builder: buildScaffold,
-    );
-  }
-
-  Scaffold buildScaffold(BuildContext context, StudentModel studentModel, _) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget> [
-            if (studentModel.loading) CircularProgressIndicator() else Expanded(
-               child: ListView.builder(
-                   itemBuilder: (_, index) {
-                     var student = studentModel.items[index];
-                     return Dismissible(
-                       child: ListTile(
-                         title: Text(student.name),
-                         subtitle: Text(student.id),
-                       ),
-                       background: Container(
-                         color: Colors.red,
-                       ),
-                       key: ValueKey<Student>(student),
-                       onDismissed: (DismissDirection direction) {
-                         setState(() {
-                           print("Delete but not impelment it yet.");
-                         });
-                       },
-                     );
-                   },
-                 itemCount: studentModel.items.length,
-               ),
-            )
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        //onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-
-}
 
 
 

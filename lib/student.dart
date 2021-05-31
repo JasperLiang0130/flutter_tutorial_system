@@ -9,7 +9,7 @@ class Student
   String name;
   String id;
   String img;
-  List<String> grades;
+  List<dynamic> grades;
 
   Student({this.pk, this.name, this.id, this.img, this.grades});
 
@@ -19,9 +19,9 @@ class Student
       name = json['name'],
       id = json['id'],
       img = json['img'],
-      grades = json['grades'] as List;
+      grades = json['grades'];
 
-    Map<String, dynamic> toJson() =>
+  Map<String, dynamic> toJson() =>
         {
           'pk': pk,
           'name': name,
@@ -29,6 +29,7 @@ class Student
           'img': img,
           'grades': grades
         };
+
 
 }
 
@@ -68,9 +69,17 @@ class StudentModel extends ChangeNotifier {
       var student = Student.fromJson(doc.data());
       student.pk = doc.id;
       items.add(student);
+      //debug
+      /*
+      for(String g in student.grades){
+        print("grade: "+g);
+      }
+       */
     });
 
-    await Future.delayed(Duration(seconds: 2));
+
+
+    //await Future.delayed(Duration(seconds: 2));
     loading = false;
     notifyListeners();
   }
