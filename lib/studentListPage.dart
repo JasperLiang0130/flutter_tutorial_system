@@ -1,14 +1,13 @@
 import 'dart:typed_data';
 
-import 'package:assignment4/scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'student.dart';
+import 'models.dart';
 import 'dart:io' as Io;
 import 'dart:convert';
 import 'calculator.dart';
-import 'scheme.dart';
+
 
 class StudentListPage extends StatefulWidget
 {
@@ -20,25 +19,23 @@ class StudentListPage extends StatefulWidget
 class _StudentPageState extends State<StudentListPage>{
   @override
   Widget build(BuildContext context) {
-    return Consumer<StudentModel>(
-      builder: buildScaffold,
+    return Consumer<AllModels>(
+        builder: buildScaffold,
     );
   }
 
-  Scaffold buildScaffold(BuildContext context, StudentModel studentModel, _) {
+  Scaffold buildScaffold(BuildContext context, AllModels allModels, _) {
     var calculate = Calculator();
-    var schemeModel = SchemeModel();
-    List<Scheme> schemes = schemeModel.items;
+    List<Scheme> schemes = allModels.schItems;
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget> [
-            if (studentModel.loading && schemeModel.loading) CircularProgressIndicator() else Expanded(
+            if (allModels.loading) CircularProgressIndicator() else Expanded(
               child: ListView.builder(
                 itemBuilder: (_, index) {
-                  var student = studentModel.items[index];
-                  print(schemes.length.toString()+" is scheme length");
+                  var student = allModels.stuItems[index];
                   Uint8List bytes = Base64Decoder().convert(student.img);
                   return Dismissible(
                     child: ListTile(
@@ -64,7 +61,7 @@ class _StudentPageState extends State<StudentListPage>{
                     },
                   );
                 },
-                itemCount: studentModel.items.length,
+                itemCount: allModels.stuItems.length,
               ),
             )
           ],
@@ -79,3 +76,4 @@ class _StudentPageState extends State<StudentListPage>{
   }
 
 }
+

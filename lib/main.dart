@@ -1,7 +1,8 @@
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'student.dart';
+import 'models.dart';
 import 'studentListPage.dart';
 
 void main() {
@@ -33,14 +34,14 @@ class MyApp extends StatelessWidget {
         {
           //BEGIN: the old MyApp builder from last week
           return ChangeNotifierProvider(
-              create: (context) => StudentModel(),
+              create: (context) => AllModels(),
               child: MaterialApp(
                   title: 'Assignment4',
                   theme: ThemeData(
                     primarySwatch: Colors.blue,
                   ),
                   home: MyHomePage(title: 'Assignment4')
-              )
+              ),
           );
           //END: the old MyApp builder from last week
         }

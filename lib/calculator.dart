@@ -1,8 +1,8 @@
 import 'dart:collection';
 
-import 'package:assignment4/scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'models.dart';
 
 
 class Calculator
@@ -11,7 +11,7 @@ class Calculator
   num calculateStudentAvg(List<String> grades, List<Scheme> schemes){
     //print("shceme size: "+schemes.length.toString());
     double sum = 0.0;
-    for(int i; i<schemes.length; i++){
+    for(int i=0; i<schemes.length; i++){
       switch(schemes[i].type){
         case "level_HD":
           sum += transferLevelHD(grades[schemes[i].week-1]);
@@ -32,7 +32,7 @@ class Calculator
           break;
       }
     }
-    return sum/schemes.length.toDouble()*100.0;
+    return num.parse((sum/schemes.length.toDouble()).toStringAsFixed(1));
   }
 
   num transferLevelHD(String grade){
@@ -83,6 +83,10 @@ class Calculator
   }
 
   num convertNewBaseOfScore(String score, String extra, num base){
+    if(score == "")
+    {
+      return 0.0;
+    }
     return double.parse(score)/double.parse(extra)*base.toDouble();
   }
 
@@ -98,6 +102,9 @@ class Calculator
   }
 
   num getCheckBoxScore(String s){
+    if(s == ""){
+      return 0.0;
+    }
     List<String> boxes = s.split(",");
     return countCheckBox(s).toDouble()/boxes.length.toDouble()*100.0;
   }
