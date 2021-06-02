@@ -1,11 +1,14 @@
 import 'dart:typed_data';
 
+import 'package:assignment4/scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'student.dart';
 import 'dart:io' as Io;
 import 'dart:convert';
+import 'calculator.dart';
+import 'scheme.dart';
 
 class StudentListPage extends StatefulWidget
 {
@@ -23,15 +26,19 @@ class _StudentPageState extends State<StudentListPage>{
   }
 
   Scaffold buildScaffold(BuildContext context, StudentModel studentModel, _) {
+    var calculate = Calculator();
+    var schemeModel = SchemeModel();
+    List<Scheme> schemes = schemeModel.items;
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget> [
-            if (studentModel.loading) CircularProgressIndicator() else Expanded(
+            if (studentModel.loading && schemeModel.loading) CircularProgressIndicator() else Expanded(
               child: ListView.builder(
                 itemBuilder: (_, index) {
                   var student = studentModel.items[index];
+                  print(schemes.length.toString()+" is scheme length");
                   Uint8List bytes = Base64Decoder().convert(student.img);
                   return Dismissible(
                     child: ListTile(
@@ -41,7 +48,7 @@ class _StudentPageState extends State<StudentListPage>{
                         width: 70,
                         child: Image.memory(bytes, fit: BoxFit.contain, ),
                       ),
-                      trailing: Text("no grades yet"),
+                      trailing: Text(calculate.calculateStudentAvg(student.grades, schemes).toString()+"%"),
                       onTap: () {
                         print(student.name+" is tapped!");
                       },

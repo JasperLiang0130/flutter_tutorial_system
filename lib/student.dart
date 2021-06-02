@@ -9,7 +9,7 @@ class Student
   String name;
   String id;
   String img;
-  List<dynamic> grades;
+  List<String> grades;
 
   Student({this.pk, this.name, this.id, this.img, this.grades});
 
@@ -19,7 +19,7 @@ class Student
       name = json['name'],
       id = json['id'],
       img = json['img'],
-      grades = json['grades'];
+      grades = json['grades'].cast<String>();
 
   Map<String, dynamic> toJson() =>
         {
@@ -75,6 +75,7 @@ class StudentModel extends ChangeNotifier {
         print("grade: "+g);
       }
        */
+
     });
 
 
