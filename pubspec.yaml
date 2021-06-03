@@ -25,6 +25,7 @@ dependencies:
     sdk: flutter
   provider: any
 
+  flutter_native_image: ^0.0.5
   camera:
   path_provider:
   path:

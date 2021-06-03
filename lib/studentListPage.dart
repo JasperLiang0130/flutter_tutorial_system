@@ -1,8 +1,11 @@
+import 'dart:math';
 import 'dart:typed_data';
-
+import 'package:assignment4/studentDetail.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'cameraController.dart';
@@ -12,7 +15,8 @@ import 'dart:convert';
 import 'calculator.dart';
 import 'package:camera/camera.dart';
 import 'dart:async';
-import 'cameraController.dart';
+
+
 
 class StudentListPage extends StatefulWidget
 {
@@ -24,7 +28,9 @@ class StudentListPage extends StatefulWidget
 class _StudentPageState extends State<StudentListPage> {
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  File _displayImg ;  //Image.asset('assets/images/camera.png');
+  File _displayImg;  //Image.asset('assets/images/camera.png');
+  File _defaultImg;
+  int schemesLength;
 
   void androidIOSUpload() async
   {
@@ -45,12 +51,17 @@ class _StudentPageState extends State<StudentListPage> {
                 )
         )
     );
+    if(picture != null){
+      _displayImg = picture;
+    }
+
   }
 
   Future<File> getImageFileFromAssets(String path) async {
-    final byteData = await rootBundle.load(path);
+    final byteData = await rootBundle.load('$path');
 
     final file = File('${(await getTemporaryDirectory()).path}/$path');
+    await file.create(recursive: true);
     await file.writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
 
     return file;
@@ -59,6 +70,7 @@ class _StudentPageState extends State<StudentListPage> {
     Future<void> showAddDialog(BuildContext context) async {
       bool _uploading = false;
       _displayImg = await getImageFileFromAssets('assets/images/camera.png');
+      _defaultImg = _displayImg;
       showDialog(context: context,
           builder: (context) {
             final TextEditingController _textNameController = TextEditingController();
@@ -75,7 +87,7 @@ class _StudentPageState extends State<StudentListPage> {
                           height: 100,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: null,//Image.file(_displayImg),
+                              image: FileImage(_displayImg),
                             ),
                           ),
                           child: new FlatButton(
@@ -87,8 +99,12 @@ class _StudentPageState extends State<StudentListPage> {
                                 await androidIOSUpload();
                                 setState(() {
                                   _uploading = false; //visual feedback of upload
-                                  //_displayImg = new AssetImage('assets/images/man.png');
                                 });
+
+                                if(_displayImg == _defaultImg){
+                                  print("Not change image. it will use default image.");
+                                }
+
                               },
                               child: null
                           ),
@@ -114,12 +130,27 @@ class _StudentPageState extends State<StudentListPage> {
                 ),
                 actions: <Widget>[
                   TextButton(
-                      onPressed: () {
+                      onPressed: () async{
                         print("confirm is click.");
+                        var newStudent = Student();
+                        if (_formKey.currentState.validate()) { //if it is validate
+                          newStudent.name = _textNameController.text;
+                          newStudent.id = _textStuIdController.text;
+                          if(_displayImg == _defaultImg){
+                            _displayImg = await getImageFileFromAssets('assets/images/man.png');
+                          }
+                          newStudent.img = base64Encode(_displayImg.readAsBytesSync());
+                          //initial grade
+                          List<String> emptyGrade = new List<String>();
+                          for(int i=0; i<schemesLength; i++){
+                            emptyGrade.add("");
+                          }
+                          newStudent.grades = emptyGrade;
+                          newStudent.pk = "";
 
-                        if (_formKey.currentState
-                            .validate()) { //if it is validate
-                          Navigator.of(context).pop();
+                          Provider.of<AllModels>(context, listen: false).addStudent(newStudent);
+
+                          Navigator.of(context).pop(); //close the pop up
                         }
                       },
                       child: Text("OK"))
@@ -139,6 +170,7 @@ class _StudentPageState extends State<StudentListPage> {
     Scaffold buildScaffold(BuildContext context, AllModels allModels, _) {
       var calculate = Calculator();
       List<Scheme> schemes = allModels.schItems;
+      schemesLength = schemes.length;
       return Scaffold(
         body: Center(
           child: Column(
@@ -162,6 +194,11 @@ class _StudentPageState extends State<StudentListPage> {
                               student.grades, schemes).toString() + "%"),
                           onTap: () {
                             print(student.name + " is tapped!");
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context){
+                                return StudentDetail(pk: student.pk);
+                              }
+                            ));
                           },
                         ),
                         background: Container(

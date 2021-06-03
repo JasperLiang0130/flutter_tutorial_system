@@ -33,61 +33,6 @@ class Student
 
 }
 
-class StudentModel extends ChangeNotifier {
-  final List<Student> items = [];
-
-  CollectionReference studentsCollection = FirebaseFirestore.instance.collection('students');
-  bool loading = false;
-
-  StudentModel()
-  {
-    fetchStudents();
-  }
-
-  Student get(String pk){
-    if (pk == null) return null;
-    return items.firstWhere((student) => student.pk == pk);
-  }
-
-  void add(Student item) async
-  {
-    loading = true;
-    notifyListeners();
-    await studentsCollection.add(item.toJson());
-    //refresh the db
-    await fetchStudents();
-  }
-
-  void fetchStudents() async
-  {
-    items.clear();
-    loading = true;
-    notifyListeners();
-
-    var querySnapshot = await studentsCollection.orderBy('id').get();
-    querySnapshot.docs.forEach((doc) {
-      var student = Student.fromJson(doc.data());
-      student.pk = doc.id;
-      items.add(student);
-      //debug
-      /*
-      for(String g in student.grades){
-        print("grade: "+g);
-      }
-       */
-
-    });
-
-
-
-    //await Future.delayed(Duration(seconds: 2));
-    loading = false;
-    notifyListeners();
-  }
-
-
-}
-
 class Scheme
 {
   String pk;
@@ -113,59 +58,6 @@ class Scheme
       };
 }
 
-class SchemeModel extends ChangeNotifier{
-
-  final List<Scheme> items = [];
-
-  CollectionReference schemesCollection = FirebaseFirestore.instance.collection('schemes');
-  bool loading = false;
-
-  SchemeModel()
-  {
-    fetchSchemes();
-  }
-
-  Scheme get(String pk){
-    if (pk == null) return null;
-    return items.firstWhere((scheme) => scheme.pk == pk);
-  }
-
-  void add(Scheme item) async
-  {
-    loading = true;
-    notifyListeners();
-    await schemesCollection.add(item.toJson());
-    //refresh the db
-    await fetchSchemes();
-  }
-
-  void fetchSchemes() async
-  {
-    items.clear();
-    loading = true;
-    notifyListeners();
-
-    var querySnapshot = await schemesCollection.orderBy('week').get();
-    querySnapshot.docs.forEach((doc) {
-      var scheme = Scheme.fromJson(doc.data());
-      scheme.pk = doc.id;
-      items.add(scheme);
-      //debug
-    });
-    /*
-    for(Scheme i in items){
-      print(i.pk);
-      print(i.week);
-    }
-     */
-
-    //await Future.delayed(Duration(seconds: 2));
-    loading = false;
-    notifyListeners();
-  }
-
-
-}
 
 class AllModels extends ChangeNotifier {
   final List<Student> stuItems = [];
@@ -179,6 +71,34 @@ class AllModels extends ChangeNotifier {
 
   AllModels() {
     fetchAll();
+  }
+
+  Student getStudent(String pk){
+    if (pk == null) return null;
+    return stuItems.firstWhere((student) => student.pk == pk);
+  }
+
+  void addStudent(Student item) async
+  {
+    loading = true;
+    notifyListeners();
+    await studentsCollection.add(item.toJson());
+    //refresh the db
+    await fetchAll();
+  }
+
+  Scheme getScheme(String pk){
+    if (pk == null) return null;
+    return schItems.firstWhere((scheme) => scheme.pk == pk);
+  }
+
+  void addScheme(Scheme item) async
+  {
+    loading = true;
+    notifyListeners();
+    await schemesCollection.add(item.toJson());
+    //refresh the db
+    await fetchAll();
   }
 
 
