@@ -191,7 +191,9 @@ class _StudentPageState extends State<StudentListPage> {
                             child: Image.memory(bytes, fit: BoxFit.contain,),
                           ),
                           trailing: Text(calculate.calculateStudentAvg(
-                              student.grades, schemes).toString() + "%"),
+                              student.grades, schemes).toString() + "%",
+                              style: TextStyle(fontSize: 18),
+                          ),
                           onTap: () {
                             print(student.name + " is tapped!");
                             Navigator.push(context, MaterialPageRoute(

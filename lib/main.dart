@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Tutorial Marking'),
+          title: const Text('KIT305 Tutorial (1pm - 3pm)'),
           bottom: const TabBar(
             tabs: <Widget>[
               Tab(

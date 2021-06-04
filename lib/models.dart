@@ -87,6 +87,14 @@ class AllModels extends ChangeNotifier {
     await fetchAll();
   }
 
+  void updateStudent(String pk, Student item) async
+  {
+    loading = true;
+    notifyListeners();
+    await studentsCollection.doc(pk).set(item.toJson());
+    await fetchAll();
+  }
+
   Scheme getScheme(String pk){
     if (pk == null) return null;
     return schItems.firstWhere((scheme) => scheme.pk == pk);
