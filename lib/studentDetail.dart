@@ -25,6 +25,7 @@ class _StudentDetailState extends State<StudentDetail>{
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final stuIdController = TextEditingController();
+  final scoreController = TextEditingController();
   var updateGrades;
 
   @override
@@ -95,14 +96,13 @@ class _StudentDetailState extends State<StudentDetail>{
                               child: ListView.builder(
                                   itemBuilder: (BuildContext context, index){
                                     var scheme = schemes[index];
-
+                                    scoreController.text = updateGrades[scheme.week-1];
                                     return Padding(
-                                        padding: EdgeInsets.only(left: 5, top: 20, right: 5, bottom: 20),
+                                        padding: EdgeInsets.only(left: 100, top: 10, right: 90, bottom: 10),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text("Week "+scheme.week.toString()),
-                                            Text(scheme.type),
+                                            Text("Week "+scheme.week.toString()+": "+scheme.type),
                                             if(scheme.type == "level_HD")
                                               DropdownButton<String>(
                                                   value: updateGrades[scheme.week-1],
@@ -179,9 +179,21 @@ class _StudentDetailState extends State<StudentDetail>{
                                               Container(
                                                 width:50,
                                                 child: TextField(
+                                                  controller: scoreController,
                                                   decoration: InputDecoration(
-                                                      labelText: "score"),
+                                                      hintText: "score",
+                                                  ),
                                                   keyboardType: TextInputType.number,
+                                                  onChanged: (String newScore){
+                                                    if(double.parse(scheme.extra)< double.parse(newScore)){
+                                                      scoreController.text = scheme.extra;
+                                                    }else{
+                                                      scoreController.text = newScore;
+                                                    }
+                                                  },
+                                                  onEditingComplete: () {
+
+                                                  },
                                                 ),
                                               ),
                                             if(scheme.type == "checkbox")
