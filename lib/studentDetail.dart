@@ -25,6 +25,7 @@ class _StudentDetailState extends State<StudentDetail>{
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final stuIdController = TextEditingController();
+  var dropdownValue;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,7 @@ class _StudentDetailState extends State<StudentDetail>{
         switch(schemes[i].type){
           case "level_HD":
             final List<String> items = <String>["HD+", "HD", "DN", "CR", "PP", "NN"];
-            String dropdownValue = grades[schemes[i].week-1];
+            dropdownValue = grades[schemes[i].week-1];
             listings.add(DropdownButton<String>(
                 value: dropdownValue,
                 icon: const Icon(Icons.arrow_downward),
@@ -62,9 +63,11 @@ class _StudentDetailState extends State<StudentDetail>{
                 }).toList(),
                 onChanged: (String newValue){
                   print("new value: "+newValue);
+                  dropdownValue = newValue;
+
                   setState(() {
-                    dropdownValue = newValue;
                   });
+
                   print("dropdownValue: "+dropdownValue);
                 }
               )
@@ -138,17 +141,24 @@ class _StudentDetailState extends State<StudentDetail>{
                                 )
                               ],
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 20),
+                            SizedBox(
+                              height: 485,
                               child: Column(
-                                children: _getGradeLists(student.grades),
+                                children: [
+                                  Text("hello"),
+                                  Text("fjaljdfl"),
+                                ],
                               ),
                             ),
+
                             ElevatedButton.icon(onPressed: () {
+                              print(dropdownValue);
+                              /*
                               if (_formKey.currentState.validate()) {
                                 //return to previous screen
                                 Navigator.pop(context);
                               }
+                               */
                             },
                                 icon: Icon(Icons.save),
                                 label: Text("Save Values"))
@@ -165,3 +175,93 @@ class _StudentDetailState extends State<StudentDetail>{
 
 }
 
+/*
+SingleChildScrollView(
+                              physics: ScrollPhysics(),
+                              child: Column(
+                                children: [
+                                  ListView.builder(
+                                    itemBuilder: (_, index){
+                                      var scheme = schemes[index];
+                                      return ListTile(
+                                        leading: Text("Week "+scheme.week.toString()),
+                                        title: Text(scheme.type),
+                                      );
+                                    },
+                                    itemCount: schemes.length,
+                                  ),
+                                ],
+                              ),
+                            ),
+ */
+
+
+/*
+Expanded(
+                                        child: ListView.builder(
+                                          itemBuilder: (_, index){
+                                            var grades = student.grades;
+                                            var scheme = schemes[index];
+                                            switch(scheme.type) {
+                                              case "level_HD":
+                                                final List<String> items = <String>["HD+","HD","DN","CR","PP","NN"];
+                                                dropdownValue = grades[scheme.week - 1];
+                                                return ListTile(
+                                                  leading: Text("Week " + scheme.week.toString()),
+                                                  title: Text(scheme.type),
+                                                  trailing: DropdownButton<String>(
+                                                      value: dropdownValue,
+                                                      icon: const Icon(
+                                                          Icons.arrow_downward),
+                                                      iconSize: 14,
+                                                      elevation: 16,
+                                                      style: const TextStyle(
+                                                          color: Colors.black),
+                                                      underline: Container(
+                                                        height: 1,
+                                                        color: Colors.deepOrange,
+                                                      ),
+                                                      items: items.map<
+                                                          DropdownMenuItem<String>>((
+                                                          String value) {
+                                                        return DropdownMenuItem<String>(
+                                                          value: value,
+                                                          child: Text(value),
+                                                        );
+                                                      }).toList(),
+                                                      onChanged: (String newValue) {
+                                                        print("new value: " + newValue);
+                                                        setState(() {
+                                                          dropdownValue = newValue;
+                                                        });
+                                                        print("dropdownValue: " +
+                                                            dropdownValue);
+                                                      }
+                                                  ),
+                                                );
+                                              case "level_A":
+                                                return ListTile(
+                                                  leading: Text("Week " + scheme.week.toString()),
+                                                  title: Text(scheme.type),
+                                                );
+                                              case "attendance":
+                                                return ListTile(
+                                                  leading: Text("Week " + scheme.week.toString()),
+                                                  title: Text(scheme.type),
+                                                );
+                                              case "checkbox":
+                                                return ListTile(
+                                                  leading: Text("Week " + scheme.week.toString()),
+                                                  title: Text(scheme.type),
+                                                );
+                                              case "score":
+                                                return ListTile(
+                                                  leading: Text("Week " + scheme.week.toString()),
+                                                  title: Text(scheme.type),
+                                                );
+                                            }
+                                          },
+                                        ),
+                                    )
+
+ */
