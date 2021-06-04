@@ -25,73 +25,21 @@ class _StudentDetailState extends State<StudentDetail>{
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final stuIdController = TextEditingController();
-  var dropdownValue;
+  var updateGrades;
 
   @override
   Widget build(BuildContext context) {
     var students = Provider.of<AllModels>(context, listen: false).schItems;
     var schemes = Provider.of<AllModels>(context, listen: false).schItems;
     var student = Provider.of<AllModels>(context, listen: false).getStudent(widget.pk);
+    updateGrades = student.grades;
 
     nameController.text = student.name;
     stuIdController.text = student.id;
     Uint8List bytes = Base64Decoder().convert(student.img);
-
-    //get dynamic widget
-    List<Widget> _getGradeLists(List<String> grades){
-      List listings = List<Widget>();
-      for(int i =0; i< schemes.length; i++){
-        switch(schemes[i].type){
-          case "level_HD":
-            final List<String> items = <String>["HD+", "HD", "DN", "CR", "PP", "NN"];
-            dropdownValue = grades[schemes[i].week-1];
-            listings.add(DropdownButton<String>(
-                value: dropdownValue,
-                icon: const Icon(Icons.arrow_downward),
-                iconSize: 14,
-                elevation: 16,
-                style: const TextStyle(color: Colors.black),
-                underline: Container(
-                  height: 1,
-                  color: Colors.deepOrange,
-                ),
-                items: items.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (String newValue){
-                  print("new value: "+newValue);
-                  dropdownValue = newValue;
-
-                  setState(() {
-                  });
-
-                  print("dropdownValue: "+dropdownValue);
-                }
-              )
-            );
-            break;
-          case "level_A":
-            listings.add(Text("hello"));
-            break;
-          case "attendance":
-            listings.add(Text("att forfun"));
-            break;
-          case "checkbox":
-            listings.add(Text("check booo"));
-            break;
-          case "score":
-            listings.add(Text("jk rolling"));
-            break;
-          default:
-            break;
-        }
-      }
-
-        return listings;
-    }
+    final List<String> levelHD_items = <String>["HD+", "HD", "DN", "CR", "PP", "NN", ""];
+    final List<String> levelA_items = <String>["A", "B", "C", "D", "F", ""];
+    final List<String> attend_items = <String>["Absent", "Attend", ""];
 
     return StatefulBuilder(builder: (context, setState){
       return Scaffold(
@@ -108,6 +56,7 @@ class _StudentDetailState extends State<StudentDetail>{
                       child: Padding(
                         padding: const EdgeInsets.only(),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -143,16 +92,108 @@ class _StudentDetailState extends State<StudentDetail>{
                             ),
                             SizedBox(
                               height: 485,
-                              child: Column(
-                                children: [
-                                  Text("hello"),
-                                  Text("fjaljdfl"),
-                                ],
-                              ),
-                            ),
+                              child: ListView.builder(
+                                  itemBuilder: (BuildContext context, index){
+                                    var scheme = schemes[index];
 
+                                    return Padding(
+                                        padding: EdgeInsets.only(left: 5, top: 20, right: 5, bottom: 20),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("Week "+scheme.week.toString()),
+                                            Text(scheme.type),
+                                            if(scheme.type == "level_HD")
+                                              DropdownButton<String>(
+                                                  value: updateGrades[scheme.week-1],
+                                                  icon: const Icon(Icons.arrow_downward),
+                                                  iconSize: 14,
+                                                  elevation: 16,
+                                                  style: const TextStyle(color: Colors.black),
+                                                  underline: Container(
+                                                    height: 1,
+                                                    color: Colors.deepOrange,
+                                                  ),
+                                                  items: levelHD_items.map<DropdownMenuItem<String>>((String value) {
+                                                    return DropdownMenuItem<String>(
+                                                      value: value,
+                                                      child: Text(value),
+                                                    );
+                                                  }).toList(),
+                                                  onChanged: (String newValue){
+                                                    setState(() {
+                                                      updateGrades[scheme.week-1] = newValue;
+                                                    });
+                                                    print("dropdownValue: "+updateGrades[scheme.week-1]);
+                                                  }
+                                              ),
+                                            if(scheme.type == "level_A")
+                                              DropdownButton<String>(
+                                                  value: updateGrades[scheme.week-1],
+                                                  icon: const Icon(Icons.arrow_downward),
+                                                  iconSize: 14,
+                                                  elevation: 16,
+                                                  style: const TextStyle(color: Colors.black),
+                                                  underline: Container(
+                                                    height: 1,
+                                                    color: Colors.deepOrange,
+                                                  ),
+                                                  items: levelA_items.map<DropdownMenuItem<String>>((String value) {
+                                                    return DropdownMenuItem<String>(
+                                                      value: value,
+                                                      child: Text(value),
+                                                    );
+                                                  }).toList(),
+                                                  onChanged: (String newValue){
+                                                    setState(() {
+                                                      updateGrades[scheme.week-1] = newValue;
+                                                    });
+                                                    print("dropdownValue: "+updateGrades[scheme.week-1]);
+                                                  }
+                                              ),
+                                            if(scheme.type == "attendance")
+                                              DropdownButton<String>(
+                                                  value: updateGrades[scheme.week-1],
+                                                  icon: const Icon(Icons.arrow_downward),
+                                                  iconSize: 14,
+                                                  elevation: 16,
+                                                  style: const TextStyle(color: Colors.black),
+                                                  underline: Container(
+                                                    height: 1,
+                                                    color: Colors.deepOrange,
+                                                  ),
+                                                  items: attend_items.map<DropdownMenuItem<String>>((String value) {
+                                                    return DropdownMenuItem<String>(
+                                                      value: value,
+                                                      child: Text(value),
+                                                    );
+                                                  }).toList(),
+                                                  onChanged: (String newValue){
+                                                    setState(() {
+                                                      updateGrades[scheme.week-1] = newValue;
+                                                    });
+                                                    print("dropdownValue: "+updateGrades[scheme.week-1]);
+                                                  }
+                                              ),
+                                            if(scheme.type == "score")
+                                              Container(
+                                                width:50,
+                                                child: TextField(
+                                                  decoration: InputDecoration(
+                                                      labelText: "score"),
+                                                  keyboardType: TextInputType.number,
+                                                ),
+                                              ),
+                                            if(scheme.type == "checkbox")
+                                              Text("box"),
+                                          ],
+                                        ),
+                                    );
+                                  },
+                                  itemCount: schemes.length,
+                              )
+                            ),
                             ElevatedButton.icon(onPressed: () {
-                              print(dropdownValue);
                               /*
                               if (_formKey.currentState.validate()) {
                                 //return to previous screen
