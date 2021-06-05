@@ -1,4 +1,5 @@
 
+import 'package:assignment4/schemeListPage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -101,11 +102,13 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: TabBarView(
           children: <Widget> [
-            //StudentsPage(),
             StudentListPage(),
+            SchemeListPage(),
+            /*
             Center(
               child: Text("It's tutorial area"),
             ),
+             */
 
           ],
         ),

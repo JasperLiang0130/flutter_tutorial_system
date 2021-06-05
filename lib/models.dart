@@ -78,6 +78,15 @@ class AllModels extends ChangeNotifier {
     return stuItems.firstWhere((student) => student.pk == pk);
   }
 
+  void deleteStudent(String pk) async
+  {
+    loading = true;
+    notifyListeners();
+    await studentsCollection.doc(pk).delete();
+
+    await fetchAll();
+  }
+
   void addStudent(Student item) async
   {
     loading = true;

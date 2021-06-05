@@ -8,6 +8,43 @@ import 'models.dart';
 class Calculator
 {
 
+  String calculateClassAvg(Scheme scheme, List<Student> students){
+    double sum = 0.0;
+      switch(scheme.type){
+        case "level_HD":
+          for(int i=0; i<students.length; i++ ){
+            sum +=  transferLevelHD((students[i].grades)[scheme.week-1]);
+          }
+          return (sum/students.length.toDouble()).toStringAsFixed(1)+" /100.0";
+        case "level_A":
+          for(int i=0; i<students.length; i++ ){
+            sum +=  transferLevelA((students[i].grades)[scheme.week-1]);
+          }
+          return (sum/students.length.toDouble()).toStringAsFixed(1)+" /100.0";
+        case "attendance":
+          for(int i=0; i<students.length; i++ ){
+            sum +=  transferAttendance((students[i].grades)[scheme.week-1]);
+          }
+          return (sum/students.length.toDouble()).toStringAsFixed(1)+" /100.0";
+        case "score":
+          for(int i=0; i<students.length; i++ ){
+            if((students[i].grades)[scheme.week-1] != ""){
+              sum += double.parse((students[i].grades)[scheme.week-1]);
+            }
+          }
+          return (sum/students.length.toDouble()).toStringAsFixed(1)+" /"+scheme.extra+".0";
+        case "checkbox":
+          for(int i=0; i<students.length; i++ ){
+            if((students[i].grades)[scheme.week-1] != ""){
+              sum += countCheckBox((students[i].grades)[scheme.week-1]);
+            }
+          }
+          return (sum/students.length.toDouble()).toStringAsFixed(1)+" /"+scheme.extra+".0";
+        default:
+          return "N/A";
+    }
+  }
+
   num calculateStudentAvg(List<String> grades, List<Scheme> schemes){
     //print("shceme size: "+schemes.length.toString());
     double sum = 0.0;

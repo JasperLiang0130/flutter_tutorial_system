@@ -182,36 +182,92 @@ class _StudentPageState extends State<StudentListPage> {
                     itemBuilder: (_, index) {
                       var student = allModels.stuItems[index];
                       Uint8List bytes = Base64Decoder().convert(student.img);
-                      return Dismissible(
-                        child: ListTile(
-                          title: Text(student.name),
-                          subtitle: Text(student.id),
-                          leading: Container(
-                            width: 70,
-                            child: Image.memory(bytes, fit: BoxFit.contain,),
+                      return Card(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        elevation: 16,
+                        color: Colors.white,
+                        shadowColor: Colors.black38,
+                        margin: EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+                        child: Dismissible(
+                          child: ListTile(
+                            title: Text(student.name,
+                                style: TextStyle(fontSize: 16)),
+                            subtitle: Text(student.id,
+                                style: TextStyle(fontSize: 14)),
+                            leading: Container(
+                              width: 70,
+                              child: Image.memory(bytes, fit: BoxFit.contain,),
+                            ),
+                            trailing: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(calculate.calculateStudentAvg(
+                                    student.grades, schemes).toString() + "%",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                Text("Avg grade",
+                                  style: TextStyle(fontSize: 12))
+                              ],
+                            ),
+                            onTap: () {
+                              print(student.name + " is tapped!");
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (context){
+                                    return StudentDetail(pk: student.pk);
+                                  }
+                              ));
+                            },
                           ),
-                          trailing: Text(calculate.calculateStudentAvg(
-                              student.grades, schemes).toString() + "%",
-                              style: TextStyle(fontSize: 18),
+                          background: Container(
+                            color: Colors.red,
+                            child: Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(Icons.delete, color: Colors.white),
+                                  Text('Move to trash', style: TextStyle(color: Colors.white),
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
-                          onTap: () {
-                            print(student.name + " is tapped!");
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (context){
-                                return StudentDetail(pk: student.pk);
-                              }
-                            ));
+                          secondaryBackground: Container(
+                            color: Colors.red,
+                            child: Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  Icon(Icons.delete, color: Colors.white),
+                                  Text('Move to trash', style: TextStyle(color: Colors.white),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          confirmDismiss: (DismissDirection direction) async {
+                            return await showDialog(context: context,
+                                builder: (BuildContext context){
+                                  return AlertDialog(
+                                    title: Text("Delete Alert"),
+                                    content: Text("Are you sure you want to delete "+student.name+" ("+student.id+") ?"),
+                                    actions: <Widget>[
+                                      FlatButton(onPressed: () => Navigator.of(context).pop(false), child: Text("Cancel")),
+                                      FlatButton(onPressed: () => Navigator.of(context).pop(true), child: Text("Delete", style: TextStyle(color: Colors.red)
+                                      )),
+                                    ],
+                                  );
+                                }
+                            );
+                          },
+                          key: ValueKey<Student>(student),
+                          onDismissed: (DismissDirection direction) {
+                            setState(() {
+                              allModels.deleteStudent(student.pk);
+                            });
                           },
                         ),
-                        background: Container(
-                          color: Colors.red,
-                        ),
-                        key: ValueKey<Student>(student),
-                        onDismissed: (DismissDirection direction) {
-                          setState(() {
-                            print("Delete but not impelment it yet.");
-                          });
-                        },
                       );
                     },
                     itemCount: allModels.stuItems.length,
@@ -224,7 +280,7 @@ class _StudentPageState extends State<StudentListPage> {
           onPressed: () async {
             showAddDialog(context);
           },
-          tooltip: 'Increment',
+          tooltip: 'Add Student',
           child: Icon(Icons.add),
         ), // This trailing comma makes auto-formatting nicer for build methods.
       );
