@@ -28,6 +28,9 @@ class _SchemePageState extends State<SchemeListPage> {
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var schemesLength;
+  final _textTyepController = TextEditingController();
+  final _textExtraController = TextEditingController();
+  final _extraNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +41,9 @@ class _SchemePageState extends State<SchemeListPage> {
 
   Future<void> showAddSchemeDialog(BuildContext context) async {
     bool _uploading = false;
+    bool _visiableExtra = false;
+    final List<String> schemeType_items = <String>["HD+/HD/DN/CR/PP/NN", "A/B/C/D/F", "Attend/Absent", "Score of X", "CheckBox"];
+    _textTyepController.text = schemeType_items.first;
 
     showDialog(context: context,
       builder: (context) {
@@ -50,13 +56,108 @@ class _SchemePageState extends State<SchemeListPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text("Week "+(schemesLength+1).toString()),
+                  SizedBox(height: 10,),
                   //dropdown list
+                  Container(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color:Colors.black45, width: 2),
+                    ),
+                    child: DropdownButton<String>(
+                        value: _textTyepController.text ,
+                        icon: const Icon(Icons.arrow_drop_down),
+                        iconSize: 20,
+                        elevation: 16,
+                        style: const TextStyle(color: Colors.black, fontSize: 16),
+                        items: schemeType_items.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (String newValue){
+                          setState(() {
+                            _textTyepController.text = newValue;
+                            if(newValue == "Score of X"){
+                              _visiableExtra = true;
+                              _extraNameController.text = "X";
+                            }else if (newValue == "CheckBox"){
+                              _visiableExtra = true;
+                              _extraNameController.text = "Num of box";
+                            }else{
+                              _visiableExtra = false;
+                              _extraNameController.text = "";
+                            }
+                          });
+                          print("type: "+_textTyepController.text);
+                        }
+                    ),
+                  ),
+                  SizedBox(height: 10,),
                   //extra (need to be hidden)
+                  Visibility(
+                    visible: _visiableExtra,
+                    maintainState: true,
+                    maintainAnimation: true,
+                    child: TextFormField(
+                      controller: _textExtraController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        suffixIcon: Icon(Icons.edit),
+                        labelText: _extraNameController.text,
+                        hintText: "Type "+_extraNameController.text,
+                      ),
+                      validator: (value) {
+                        if(value.isNotEmpty && num.parse(value) == 0){
+                          return "Cannot be 0";
+                        }
+                        return value.isNotEmpty ? null : "Invalid Input";
+                      },
+                      onChanged: (value){
+                        ((){
+                          _textExtraController.text = value;
+                          _textExtraController.selection = TextSelection.fromPosition(TextPosition(offset: _textExtraController.text.length));
+                        });
+                        print(_extraNameController.text+": "+_textExtraController.text);
+                      },
+                    ),
+                  )
                 ],
               ),
             ),
             actions: <Widget>[
-
+              TextButton(
+                  onPressed: () async{
+                    print("confirm is click.");
+                    var newScheme = Scheme();
+                    newScheme.pk = "";
+                    newScheme.week = schemesLength+1;
+                    newScheme.type = convertTypenameToDB(_textTyepController.text);
+                    if(_textTyepController.text == "Score of X"){
+                      if (_formKey.currentState.validate()) { //if it is validate
+                        newScheme.extra = _textExtraController.text;
+                        Provider.of<AllModels>(context, listen: false).addScheme(newScheme);
+                        Navigator.of(context).pop(); //close the pop up
+                      }
+                    }else if (_textTyepController.text == "CheckBox"){
+                      if (_formKey.currentState.validate()) { //if it is validate
+                        newScheme.extra = _textExtraController.text;
+                        Provider.of<AllModels>(context, listen: false).addScheme(newScheme);
+                        Navigator.of(context).pop(); //close the pop up
+                      }
+                    }else{
+                      if (_formKey.currentState.validate()) { //if it is validate
+                        newScheme.extra = "";
+                        Provider.of<AllModels>(context, listen: false).addScheme(newScheme);
+                        Navigator.of(context).pop(); //close the pop up
+                      }
+                    }
+                  },
+                  child: Text("OK"))
             ],
           );
         });
@@ -124,6 +225,22 @@ class _SchemePageState extends State<SchemeListPage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
 
+  }
+
+  String convertTypenameToDB(String s){
+    switch(s){
+      case "HD+/HD/DN/CR/PP/NN":
+        return "level_HD";
+      case "A/B/C/D/F":
+        return "level_A";
+      case "Attend/Absent":
+        return "attendance";
+      case "score":
+        return "Score of X";
+      case "CheckBox":
+        return "checkbox";
+        return "";
+    }
   }
 
   String transferSchemeTypeName(Scheme scheme){

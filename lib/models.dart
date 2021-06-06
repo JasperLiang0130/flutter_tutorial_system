@@ -114,6 +114,11 @@ class AllModels extends ChangeNotifier {
     loading = true;
     notifyListeners();
     await schemesCollection.add(item.toJson());
+    //update all student grade
+    for(Student s in stuItems){
+      s.grades.add("");
+      await studentsCollection.doc(s.pk).set(s.toJson());
+    }
     //refresh the db
     await fetchAll();
   }

@@ -167,82 +167,103 @@ class _StudentDetailState extends State<StudentDetail>{
                                             Text("Week "+scheme.week.toString()+": "+scheme.type,
                                             style: TextStyle(fontSize: 18),),
                                             if(scheme.type == "level_HD")
-                                              DropdownButton<String>(
-                                                  value: updateGrades[scheme.week-1],
-                                                  icon: const Icon(Icons.arrow_downward),
-                                                  iconSize: 14,
-                                                  elevation: 16,
-                                                  style: const TextStyle(color: Colors.black, fontSize: 16),
-                                                  underline: Container(
-                                                    height: 1,
-                                                    color: Colors.deepOrange,
-                                                  ),
-                                                  items: levelHD_items.map<DropdownMenuItem<String>>((String value) {
-                                                    return DropdownMenuItem<String>(
-                                                      value: value,
-                                                      child: Text(value),
-                                                    );
-                                                  }).toList(),
-                                                  onChanged: (String newValue){
-                                                    setState(() {
-                                                      updateGrades[scheme.week-1] = newValue;
-                                                      avgController.text = calculater.calculateStudentAvg(updateGrades, schemes).toString();
-                                                    });
-                                                    gradeController.text = updateGrades.join(";");
-                                                    print("gradeController: "+gradeController.text);
-                                                  }
+                                              Container(
+                                                padding: const EdgeInsets.only(left: 16, right: 16),
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(10),
+                                                  border: Border.all(color:Colors.black45, width: 2),
+                                                ),
+                                                child: DropdownButton<String>(
+                                                    value: updateGrades[scheme.week-1],
+                                                    icon: const Icon(Icons.arrow_drop_down),
+                                                    iconSize: 18,
+                                                    elevation: 16,
+                                                    style: const TextStyle(color: Colors.black, fontSize: 16),
+                                                    underline: Container(
+                                                      height: 1,
+                                                      color: Colors.deepOrange,
+                                                    ),
+                                                    items: levelHD_items.map<DropdownMenuItem<String>>((String value) {
+                                                      return DropdownMenuItem<String>(
+                                                        value: value,
+                                                        child: Text(value),
+                                                      );
+                                                    }).toList(),
+                                                    onChanged: (String newValue){
+                                                      setState(() {
+                                                        updateGrades[scheme.week-1] = newValue;
+                                                        avgController.text = calculater.calculateStudentAvg(updateGrades, schemes).toString();
+                                                      });
+                                                      gradeController.text = updateGrades.join(";");
+                                                      print("gradeController: "+gradeController.text);
+                                                    }
+                                                ),
                                               ),
                                             if(scheme.type == "level_A")
-                                              DropdownButton<String>(
-                                                  value: updateGrades[scheme.week-1],
-                                                  icon: const Icon(Icons.arrow_downward),
-                                                  iconSize: 14,
-                                                  elevation: 16,
-                                                  style: const TextStyle(color: Colors.black, fontSize: 16),
-                                                  underline: Container(
-                                                    height: 1,
-                                                    color: Colors.deepOrange,
-                                                  ),
-                                                  items: levelA_items.map<DropdownMenuItem<String>>((String value) {
-                                                    return DropdownMenuItem<String>(
-                                                      value: value,
-                                                      child: Text(value),
-                                                    );
-                                                  }).toList(),
-                                                  onChanged: (String newValue){
-                                                    setState(() {
-                                                      updateGrades[scheme.week-1] = newValue;
-                                                      avgController.text = calculater.calculateStudentAvg(updateGrades, schemes).toString();
-                                                    });
-                                                    gradeController.text = updateGrades.join(";");
-                                                    print("gradeController: "+gradeController.text);
-                                                  }
+                                              Container(
+                                                padding: const EdgeInsets.only(left: 16, right: 16),
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(10),
+                                                  border: Border.all(color:Colors.black45, width: 2),
+                                                ),
+                                                child: DropdownButton<String>(
+                                                    value: updateGrades[scheme.week-1],
+                                                    icon: const Icon(Icons.arrow_drop_down),
+                                                    iconSize: 18,
+                                                    elevation: 16,
+                                                    style: const TextStyle(color: Colors.black, fontSize: 16),
+                                                    underline: Container(
+                                                      height: 1,
+                                                      color: Colors.deepOrange,
+                                                    ),
+                                                    items: levelA_items.map<DropdownMenuItem<String>>((String value) {
+                                                      return DropdownMenuItem<String>(
+                                                        value: value,
+                                                        child: Text(value),
+                                                      );
+                                                    }).toList(),
+                                                    onChanged: (String newValue){
+                                                      setState(() {
+                                                        updateGrades[scheme.week-1] = newValue;
+                                                        avgController.text = calculater.calculateStudentAvg(updateGrades, schemes).toString();
+                                                      });
+                                                      gradeController.text = updateGrades.join(";");
+                                                      print("gradeController: "+gradeController.text);
+                                                    }
+                                                ),
                                               ),
                                             if(scheme.type == "attendance")
-                                              DropdownButton<String>(
-                                                  value: updateGrades[scheme.week-1],
-                                                  icon: const Icon(Icons.arrow_downward),
-                                                  iconSize: 14,
-                                                  elevation: 16,
-                                                  style: const TextStyle(color: Colors.black, fontSize: 16),
-                                                  underline: Container(
-                                                    height: 1,
-                                                    color: Colors.deepOrange,
-                                                  ),
-                                                  items: attend_items.map<DropdownMenuItem<String>>((String value) {
-                                                    return DropdownMenuItem<String>(
-                                                      value: value,
-                                                      child: Text(value),
-                                                    );
-                                                  }).toList(),
-                                                  onChanged: (String newValue){
-                                                    setState(() {
-                                                      updateGrades[scheme.week-1] = newValue;
-                                                      avgController.text = calculater.calculateStudentAvg(updateGrades, schemes).toString();
-                                                    });
-                                                    gradeController.text = updateGrades.join(";");
-                                                    print("gradeController: "+gradeController.text);
-                                                  }
+                                              Container(
+                                                padding: const EdgeInsets.only(left: 16, right: 16),
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(10),
+                                                  border: Border.all(color:Colors.black45, width: 2),
+                                                ),
+                                                child: DropdownButton<String>(
+                                                    value: updateGrades[scheme.week-1],
+                                                    icon: const Icon(Icons.arrow_drop_down),
+                                                    iconSize: 18,
+                                                    elevation: 16,
+                                                    style: const TextStyle(color: Colors.black, fontSize: 16),
+                                                    underline: Container(
+                                                      height: 1,
+                                                      color: Colors.deepOrange,
+                                                    ),
+                                                    items: attend_items.map<DropdownMenuItem<String>>((String value) {
+                                                      return DropdownMenuItem<String>(
+                                                        value: value,
+                                                        child: Text(value),
+                                                      );
+                                                    }).toList(),
+                                                    onChanged: (String newValue){
+                                                      setState(() {
+                                                        updateGrades[scheme.week-1] = newValue;
+                                                        avgController.text = calculater.calculateStudentAvg(updateGrades, schemes).toString();
+                                                      });
+                                                      gradeController.text = updateGrades.join(";");
+                                                      print("gradeController: "+gradeController.text);
+                                                    }
+                                                ),
                                               ),
                                             if(scheme.type == "score")
                                               Container(
