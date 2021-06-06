@@ -145,11 +145,9 @@ class _SchemePageState extends State<SchemeListPage> {
                         Navigator.of(context).pop(); //close the pop up
                       }
                     }else{
-                      if (_formKey.currentState.validate()) { //if it is validate
                         newScheme.extra = "";
                         Provider.of<AllModels>(context, listen: false).addScheme(newScheme);
                         Navigator.of(context).pop(); //close the pop up
-                      }
                     }
                   },
                   child: Text("OK"))
