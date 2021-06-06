@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:assignment4/classStudentListPage.dart';
 import 'package:assignment4/studentDetail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,15 +9,9 @@ import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'calculator.dart';
-import 'cameraController.dart';
 import 'models.dart';
-import 'dart:io';
-import 'dart:convert';
-import 'calculator.dart';
-import 'package:camera/camera.dart';
 import 'dart:async';
 
-import 'models.dart';
 
 class SchemeListPage extends StatefulWidget
 {
@@ -206,7 +201,14 @@ class _SchemePageState extends State<SchemeListPage> {
                                   style: TextStyle(fontSize: 12))
                             ],
                           ),
-
+                          onTap: (){
+                            print("tutorial "+scheme.week.toString() + " is tapped!");
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (context){
+                                  return ClassStudentListPage(pk: scheme.pk);
+                                }
+                            ));
+                          },
                         ),
                       );
                     },

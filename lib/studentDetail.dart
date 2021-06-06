@@ -9,7 +9,6 @@ import 'models.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:share/share.dart';
 
-import 'models.dart';
 
 
 class StudentDetail extends StatefulWidget{
@@ -28,11 +27,9 @@ class _StudentDetailState extends State<StudentDetail>{
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final stuIdController = TextEditingController();
-  //final scoreController = TextEditingController();
   final gradeController = TextEditingController();
   final avgController = TextEditingController();
   final calculater = Calculator();
-  //var updateGrades;
 
   @override
   Widget build(BuildContext context) {

@@ -8,6 +8,37 @@ import 'models.dart';
 class Calculator
 {
 
+  String showStudentGrade(Scheme scheme, Student student){
+    switch(scheme.type){
+      case "level_HD":
+        if(student.grades[scheme.week-1] == ""){
+          return "No Mark yet";
+        }
+        return student.grades[scheme.week-1];
+      case "level_A":
+        if(student.grades[scheme.week-1] == ""){
+          return "No Mark yet";
+        }
+        return student.grades[scheme.week-1];
+
+      case "attendance":
+        if(student.grades[scheme.week-1] == ""){
+          return "No Mark yet";
+        }
+        return student.grades[scheme.week-1];
+      case "score":
+        if(student.grades[scheme.week-1] == ""){
+          return "No Mark yet";
+        }
+        return student.grades[scheme.week-1]+" /"+scheme.extra+".0";
+      case "checkbox":
+        if(student.grades[scheme.week-1] == ""){
+          return "No Mark yet";
+        }
+        return countCheckBox(student.grades[scheme.week-1]).toString()+" /"+scheme.extra;
+    }
+  }
+
   String calculateClassAvg(Scheme scheme, List<Student> students){
     double sum = 0.0;
       switch(scheme.type){
