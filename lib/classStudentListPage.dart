@@ -1,15 +1,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:assignment4/studentDetail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:numberpicker/numberpicker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'calculator.dart';
 import 'calculator.dart';
 import 'models.dart';
 import 'dart:async';
@@ -19,7 +14,6 @@ class ClassStudentListPage extends StatefulWidget
   final String pk; //select scheme pk
 
   const ClassStudentListPage({Key key, this.pk}) : super(key: key);
-
 
   @override
   _ClassPageState createState() => _ClassPageState();
@@ -38,6 +32,7 @@ class _ClassPageState extends State<ClassStudentListPage> {
 
   @override
   Widget build(BuildContext context) {
+    scheme = Provider.of<AllModels>(context, listen: false).getScheme(widget.pk);
     return Consumer<AllModels>(
       builder: buildClassScaffod,
     );
@@ -246,6 +241,7 @@ class _ClassPageState extends State<ClassStudentListPage> {
 
                         selectedStudent.grades[scheme.week-1] = markController.text;
                         Provider.of<AllModels>(context, listen: false).updateStudent(selectedStudent.pk, selectedStudent);
+                        selectedStudent = null;
                         Navigator.of(context).pop(); //close the pop up
                     },
                     child: Text("Update"),
@@ -257,9 +253,6 @@ class _ClassPageState extends State<ClassStudentListPage> {
   }
 
   Scaffold buildClassScaffod(BuildContext context, AllModels allModels, _) {
-    print("pk: "+widget.pk);
-    scheme = Provider.of<AllModels>(context, listen: false).getScheme(widget.pk);
-
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
@@ -272,7 +265,7 @@ class _ClassPageState extends State<ClassStudentListPage> {
             if (allModels.loading) CircularProgressIndicator() else
               Expanded(
                 child: ListView.builder(
-                  itemBuilder: (_, index) {
+                  itemBuilder: (context, index) {
                     var student = allModels.stuItems[index];
                     Uint8List bytes = Base64Decoder().convert(student.img);
                     return Card(
