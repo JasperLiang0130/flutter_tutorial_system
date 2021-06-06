@@ -238,8 +238,8 @@ class _SchemePageState extends State<SchemeListPage> {
         return "level_A";
       case "Attend/Absent":
         return "attendance";
-      case "score":
-        return "Score of X";
+      case "Score of X":
+        return "score";
       case "CheckBox":
         return "checkbox";
         return "";
