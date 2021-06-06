@@ -219,6 +219,7 @@ class _SchemePageState extends State<SchemeListPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: "schemeAdd",
         onPressed: () async {
           showAddSchemeDialog(context);
         },

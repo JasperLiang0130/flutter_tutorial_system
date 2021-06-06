@@ -16,6 +16,8 @@ import 'calculator.dart';
 import 'package:camera/camera.dart';
 import 'dart:async';
 
+import 'models.dart';
+
 
 
 class StudentListPage extends StatefulWidget
@@ -31,6 +33,9 @@ class _StudentPageState extends State<StudentListPage> {
   File _displayImg;  //Image.asset('assets/images/camera.png');
   File _defaultImg;
   int schemesLength;
+  List<Student> students;
+  List<Student> filterStudents = List<Student>();
+  final filterController = TextEditingController();
 
   void androidIOSUpload() async
   {
@@ -57,7 +62,7 @@ class _StudentPageState extends State<StudentListPage> {
 
   }
 
-  Future<File> getImageFileFromAssets(String path) async {
+    Future<File> getImageFileFromAssets(String path) async {
     final byteData = await rootBundle.load('$path');
 
     final file = File('${(await getTemporaryDirectory()).path}/$path');
@@ -149,8 +154,11 @@ class _StudentPageState extends State<StudentListPage> {
                           newStudent.pk = "";
 
                           Provider.of<AllModels>(context, listen: false).addStudent(newStudent);
-
                           Navigator.of(context).pop(); //close the pop up
+                          setState((){
+                            filterController.text = "";
+                          });
+
                         }
                       },
                       child: Text("OK"))
@@ -162,6 +170,7 @@ class _StudentPageState extends State<StudentListPage> {
 
     @override
     Widget build(BuildContext context) {
+
       return Consumer<AllModels>(
         builder: buildScaffold,
       );
@@ -169,6 +178,14 @@ class _StudentPageState extends State<StudentListPage> {
 
     Scaffold buildScaffold(BuildContext context, AllModels allModels, _) {
       var calculate = Calculator();
+      students = allModels.stuItems;
+      if(filterController.text == ""){
+        print("rebuild");
+        filterStudents.clear();
+        for(Student s in students){
+          filterStudents.add(s);
+        }
+      }
       List<Scheme> schemes = allModels.schItems;
       schemesLength = schemes.length;
       return Scaffold(
@@ -176,11 +193,53 @@ class _StudentPageState extends State<StudentListPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 3, horizontal: 15),
+                child: TextFormField(
+                  controller: filterController,
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(),
+                    labelText: "Search student",
+                    hintText: "Type student name or id",
+                    suffixIcon: Icon(Icons.search),
+                  ),
+                  onChanged: (filter){
+                    print("filter: "+filter);
+                    ((){
+                      filterController.text = filter;
+                      filterController.selection = TextSelection.fromPosition(TextPosition(offset: filterController.text.length));
+                    });
+
+                    setState(() {
+                      if(filter != ""){
+                        filterStudents.clear();
+                        for(Student s in students){
+                          final lowName = s.name.toLowerCase();
+                          final lowText = filter.toLowerCase();
+                          if(lowName.length >= lowText.length && lowText == lowName.substring(0, lowText.length)){
+                            filterStudents.add(s);
+                          }
+                        }
+                        if(num.tryParse(filter)!=null){
+                          filterStudents.clear();
+                          for(Student s in students){
+                            final lowName = s.id.toLowerCase();
+                            final lowText = filter.toLowerCase();
+                            if(lowName.length >= lowText.length && lowText == lowName.substring(0, lowText.length)){
+                              filterStudents.add(s);
+                            }
+                          }
+                        }
+                      }
+                    });
+                  },
+                ),
+              ),
               if (allModels.loading) CircularProgressIndicator() else
                 Expanded(
                   child: ListView.builder(
                     itemBuilder: (_, index) {
-                      var student = allModels.stuItems[index];
+                      var student = filterStudents[index];
                       Uint8List bytes = Base64Decoder().convert(student.img);
                       return Card(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -265,18 +324,20 @@ class _StudentPageState extends State<StudentListPage> {
                           onDismissed: (DismissDirection direction) {
                             setState(() {
                               allModels.deleteStudent(student.pk);
+                              filterController.text = "";
                             });
                           },
                         ),
                       );
                     },
-                    itemCount: allModels.stuItems.length,
+                    itemCount: filterStudents.length,
                   ),
                 )
             ],
           ),
         ),
         floatingActionButton: FloatingActionButton(
+          heroTag: "studentAdd",
           onPressed: () async {
             showAddDialog(context);
           },

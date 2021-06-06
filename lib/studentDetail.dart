@@ -34,7 +34,6 @@ class _StudentDetailState extends State<StudentDetail>{
   @override
   Widget build(BuildContext context) {
     var schemes = Provider.of<AllModels>(context, listen: false).schItems;
-    var students = Provider.of<AllModels>(context, listen: false).stuItems;
     var student = Provider.of<AllModels>(context, listen: false).getStudent(widget.pk);
     nameController.text = student.name;
     stuIdController.text = student.id;
@@ -104,7 +103,7 @@ class _StudentDetailState extends State<StudentDetail>{
                               ],
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left: 10, top: 10, right: 50, bottom: 0),
+                              padding: EdgeInsets.only(left: 10, top: 10, right: 50, bottom: 10),
                               child: Row(
                                 children: [
                                   Text("Average Grade:  ",
@@ -170,23 +169,23 @@ class _StudentDetailState extends State<StudentDetail>{
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 crossAxisAlignment: CrossAxisAlignment.center,
                                                 children: [
-                                                  Icon(Icons.list, size: 36,),
+                                                  Icon(Icons.grade_outlined, size: 32,),
                                                 ],
                                               ),
                                           ),
                                           Expanded(
-                                            flex: 3,
+                                            flex: 4,
                                               child: Column(
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Text("Week "+ scheme.week.toString(), style: TextStyle(fontSize: 18)),
+                                                  Text("Week "+ scheme.week.toString(), style: TextStyle(fontSize: 20)),
                                                   Text(transferSchemeTypeName(scheme), style: TextStyle(fontSize: 12)),
                                                 ],
                                               ),
                                           ),
                                           Expanded(
-                                            flex: 5,
+                                            flex: 4,
                                               child: Padding(
                                                 padding: EdgeInsets.only(top: 10, bottom: 10),
                                                 child: Column(

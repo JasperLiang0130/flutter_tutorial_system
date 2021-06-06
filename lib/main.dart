@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('KIT305 Tutorial (1pm - 3pm)'),
-          bottom: const TabBar(
+          bottom: TabBar(
             tabs: <Widget>[
               Tab(
                 icon: Icon(Icons.people_alt),
