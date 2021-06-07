@@ -74,8 +74,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            backgroundColor: Colors.green,
-            child: Icon(Icons.photo_album),
+            backgroundColor: Colors.teal,
+            child: Icon(Icons.photo_library),
             // Provide an onPressed callback.
             onPressed: () async {
               try{
@@ -83,7 +83,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                 if (imageFile == null) {
                   return;
                 }
-                Navigator.pop(context, imageFile);
+                final picture = File(imageFile?.path);
+                Navigator.pop(context, picture);
                 return;
               } catch(e){
                 print(e);
@@ -92,7 +93,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             },
           ),
           SizedBox(
-            width: 15,
+            width: 25,
           ),
           FloatingActionButton(
             child: Icon(Icons.camera_alt),
