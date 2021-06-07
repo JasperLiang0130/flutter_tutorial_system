@@ -68,7 +68,7 @@ class _StudentDetailState extends State<StudentDetail>{
                               children: <Widget>[
                                 Container(
                                   width: 100,
-                                  padding: EdgeInsets.only(left: 5.0, top: 4,
+                                  padding: EdgeInsets.only(left: 5.0, top: 0,
                                       right: 5.0),
                                   child: Image.memory(bytes,
                                       fit: BoxFit.contain, width: 65),
@@ -78,10 +78,13 @@ class _StudentDetailState extends State<StudentDetail>{
                                         padding: EdgeInsets.only(
                                             left: 5, right: 5),
                                         child: Column(
+                                          mainAxisSize: MainAxisSize.min,
                                           children: [
                                             TextFormField(
                                               decoration: InputDecoration(
-                                                  labelText: "Student Name"),
+                                                  labelText: "Student Name",
+                                                  suffixIcon: Icon(Icons.perm_identity)
+                                              ),
                                               controller: nameController,
                                               validator: (value) {
                                                 return value.isNotEmpty ? null : "Invalid Input";
@@ -89,7 +92,9 @@ class _StudentDetailState extends State<StudentDetail>{
                                             ),
                                             TextFormField(
                                               decoration: InputDecoration(
-                                                  labelText: "Student ID"),
+                                                  labelText: "Student ID",
+                                                  suffixIcon: Icon(Icons.school_outlined)
+                                              ),
                                               controller: stuIdController,
                                               keyboardType: TextInputType.number,
                                               validator: (value) {
@@ -103,8 +108,9 @@ class _StudentDetailState extends State<StudentDetail>{
                               ],
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left: 10, top: 10, right: 50, bottom: 10),
+                              padding: EdgeInsets.only(top: 5, left: 10, bottom: 5),
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text("Average Grade:  ",
                                   style: TextStyle(fontSize: 20),),
@@ -115,7 +121,7 @@ class _StudentDetailState extends State<StudentDetail>{
                               ),
                             ),
                             SizedBox(
-                              height: 418,
+                              height: 467,
                               child: ListView.builder(
                                   itemBuilder: (BuildContext context, index){
                                     var scheme = schemes[index];
@@ -335,46 +341,81 @@ class _StudentDetailState extends State<StudentDetail>{
                                   itemCount: schemes.length,
                               )
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                ElevatedButton.icon(onPressed: () {
-                                  String txt = "Name: "+nameController.text+", Id: "+stuIdController.text+", Avg grade: "+avgController.text;
-                                  for(int i=0; i<student.grades.length;i++){
-                                    txt = txt+", Week "+(i+1).toString()+": "+student.grades[i].toString();
-                                  }
-                                  print(txt);
-                                  Share.share(txt);
-                                },
-                                    icon: Icon(Icons.share),
-                                    label: Text("SHARE"),
-                                    style: ElevatedButton.styleFrom(
-                                      primary: Colors.green
-                                    )
-                                ),
-                                ElevatedButton.icon(onPressed: () {
-
-                                  if (_formKey.currentState.validate()) {
-                                    //return to previous screen
-                                    student.name = nameController.text;
-                                    student.id = stuIdController.text;
-                                    student.grades = gradeController.text.split(";");
-                                    Provider.of<AllModels>(context, listen: false).updateStudent(widget.pk, student);
-                                    Navigator.pop(context);
-                                  }
-
-                                },
-                                    icon: Icon(Icons.save),
-                                    label: Text("Save"))
-                              ],
-                            ),
                           ],
                         ),
                       ),
                     )
                   ]
               )
-          )
+          ),
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              heroTag: "deleteTag",
+              onPressed: () async {
+                return await showDialog(context: context,
+                    builder: (BuildContext context){
+                      return AlertDialog(
+                        title: Text("Delete Alert"),
+                        content: Text("Are you sure you want to delete "+student.name+" ("+student.id+") ?"),
+                        actions: <Widget>[
+                          FlatButton(onPressed: () => Navigator.of(context).pop(false), child: Text("Cancel")),
+                          FlatButton(onPressed: () => ({
+                              setState(() {
+                                Provider.of<AllModels>(context, listen: false).deleteStudent(student.pk);
+                              }),
+                              Navigator.of(context).pop(false), //close dialog
+                              Navigator.pop(context), //back to student list page
+                            }
+                          ), child: Text("Delete", style: TextStyle(color: Colors.red)
+                          )),
+                        ],
+                      );
+                    }
+                );
+              },
+              tooltip: 'DELETE',
+              backgroundColor: Colors.red,
+              child: Icon(Icons.delete),
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            FloatingActionButton(
+              heroTag: "shareTag",
+              onPressed: () async {
+                String txt = "Name: "+nameController.text+", Id: "+stuIdController.text+", Avg grade: "+avgController.text;
+                for(int i=0; i<student.grades.length;i++){
+                  txt = txt+", Week "+(i+1).toString()+": "+student.grades[i].toString();
+                }
+                print(txt);
+                Share.share(txt);
+              },
+              tooltip: 'SHARE',
+              backgroundColor: Colors.green,
+              child: Icon(Icons.share),
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            FloatingActionButton(
+              heroTag: "saveTag",
+              onPressed: () async {
+                if (_formKey.currentState.validate()) {
+                  //return to previous screen
+                  student.name = nameController.text;
+                  student.id = stuIdController.text;
+                  student.grades = gradeController.text.split(";");
+                  Provider.of<AllModels>(context, listen: false).updateStudent(widget.pk, student);
+                  Navigator.pop(context);
+                }
+              },
+              tooltip: 'SAVE',
+              child: Icon(Icons.save),
+            ),
+          ],
+        )
       );
     });
   }
