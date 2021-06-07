@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'dart:async';
 import 'dart:io';
-
+import 'package:image_picker/image_picker.dart';
 
 //------------------------------------------
 //camera example follows:
@@ -70,42 +70,70 @@ class TakePictureScreenState extends State<TakePictureScreen> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.camera_alt),
-        // Provide an onPressed callback.
-        onPressed: () async {
-          // Take the Picture in a try / catch block. If anything goes wrong,
-          // catch the error.
-          try {
-            // Ensure that the camera is initialized.
-            await _initializeControllerFuture;
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            backgroundColor: Colors.green,
+            child: Icon(Icons.photo_album),
+            // Provide an onPressed callback.
+            onPressed: () async {
+              try{
+                final imageFile = await ImagePicker().getImage(source: ImageSource.gallery, maxHeight: 100);
+                if (imageFile == null) {
+                  return;
+                }
+                Navigator.pop(context, imageFile);
+                return;
+              } catch(e){
+                print(e);
+              }
 
-            // Attempt to take a picture and get the file `image`
-            // where it was saved.
-            final image = await _controller.takePicture();
-            final picture = File(image?.path);
+            },
+          ),
+          SizedBox(
+            width: 15,
+          ),
+          FloatingActionButton(
+            child: Icon(Icons.camera_alt),
+            // Provide an onPressed callback.
+            onPressed: () async {
+              // Take the Picture in a try / catch block. If anything goes wrong,
+              // catch the error.
+              try {
+                // Ensure that the camera is initialized.
+                await _initializeControllerFuture;
 
-            Navigator.pop(context, picture);
-            return;
+                // Attempt to take a picture and get the file `image`
+                // where it was saved.
+                final image = await _controller.takePicture();
+                final picture = File(image?.path);
 
-            //this was the camera sample from flutter, show the image full-screen. Comment out pop and return above to see it
-            // If the picture was taken, display it on a new screen.
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DisplayPictureScreen(
-                  // Pass the automatically generated path to
-                  // the DisplayPictureScreen widget.
-                  imagePath: image?.path,
-                ),
-              ),
-            );
-          } catch (e) {
-            // If an error occurs, log the error to the console.
-            print(e);
-          }
-        },
+                Navigator.pop(context, picture);
+                return;
+
+                //this was the camera sample from flutter, show the image full-screen. Comment out pop and return above to see it
+                // If the picture was taken, display it on a new screen.
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DisplayPictureScreen(
+                      // Pass the automatically generated path to
+                      // the DisplayPictureScreen widget.
+                      imagePath: image?.path,
+                    ),
+                  ),
+                );
+              } catch (e) {
+                // If an error occurs, log the error to the console.
+                print(e);
+              }
+            },
+          ),
+        ],
       ),
+
+
     );
   }
 }
