@@ -1,77 +1,34 @@
 {
   "project_info": {
-    "project_number": "621689605324",
-    "project_id": "kit305-assignment2-445da",
-    "storage_bucket": "kit305-assignment2-445da.appspot.com"
+    "project_number": "56657282583",
+    "project_id": "kit305-assignment4-b5c6f",
+    "storage_bucket": "kit305-assignment4-b5c6f.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:621689605324:android:ea049e56ec1b78132d4669",
+        "mobilesdk_app_id": "1:56657282583:android:a7e829bbf5b1ec56617e52",
         "android_client_info": {
           "package_name": "au.edu.utas.assignment4"
         }
       },
       "oauth_client": [
         {
-          "client_id": "621689605324-ddmsgii4ctmhruihtrcrdb3df8ds44ei.apps.googleusercontent.com",
+          "client_id": "56657282583-2qutmhn6ilpf0c8o7ege4t2l0r0jchri.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBQaSQ_2zLFxyLYhUBMzuGRmDuQh6H51b0"
+          "current_key": "AIzaSyCBXi0ks3mmRq9rMF-xgaSs87hhSpEMtJM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "621689605324-ddmsgii4ctmhruihtrcrdb3df8ds44ei.apps.googleusercontent.com",
+              "client_id": "56657282583-2qutmhn6ilpf0c8o7ege4t2l0r0jchri.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "621689605324-3nchb3etloebr9shldm5j5pohjc60to1.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "au.edu.utas.assignment3"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:621689605324:android:5b83b0af642fee6f2d4669",
-        "android_client_info": {
-          "package_name": "utas.edu.au.liangyc.assignment2"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "621689605324-ddmsgii4ctmhruihtrcrdb3df8ds44ei.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBQaSQ_2zLFxyLYhUBMzuGRmDuQh6H51b0"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "621689605324-ddmsgii4ctmhruihtrcrdb3df8ds44ei.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "621689605324-3nchb3etloebr9shldm5j5pohjc60to1.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "au.edu.utas.assignment3"
-              }
             }
           ]
         }

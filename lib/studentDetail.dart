@@ -68,7 +68,7 @@ class _StudentDetailState extends State<StudentDetail>{
                               children: <Widget>[
                                 Container(
                                   width: 100,
-                                  padding: EdgeInsets.only(left: 5.0, top: 0,
+                                  padding: EdgeInsets.only(left: 5.0, top: 5,
                                       right: 5.0),
                                   child: Image.memory(bytes,
                                       fit: BoxFit.contain, width: 65),
